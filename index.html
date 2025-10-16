@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Управление Arduino</title>
+    <style>
+        body { font-family: Arial; margin: 20px; background: #f0f0f0; }
+        .container { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; }
+        .led-block { margin: 15px 0; padding: 15px; border: 1px solid #ddd; border-radius: 8px; }
+        .btn { padding: 10px 20px; margin: 5px; border: none; border-radius: 5px; cursor: pointer; color: white; }
+        .on { background: #4CAF50; } /* Зеленый */
+        .off { background: #f44336; } /* Красный */
+        .status { margin-left: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎛️ Управление светодиодами</h1>
+        
+        <div class="led-block">
+            <h3>🔴 Светодиод 1</h3>
+            <button class="btn on" onclick="controlLed(1, 'on')">ВКЛ</button>
+            <button class="btn off" onclick="controlLed(1, 'off')">ВЫКЛ</button>
+            <span class="status" id="status1">❌ ВЫКЛ</span>
+        </div>
+
+        <div class="led-block">
+            <h3>🟢 Светодиод 2</h3>
+            <button class="btn on" onclick="controlLed(2, 'on')">ВКЛ</button>
+            <button class="btn off" onclick="controlLed(2, 'off')">ВЫКЛ</button>
+            <span class="status" id="status2">❌ ВЫКЛ</span>
+        </div>
+
+        <div class="led-block">
+            <h3>🟡 Светодиод 3</h3>
+            <button class="btn on" onclick="controlLed(3, 'on')">ВКЛ</button>
+            <button class="btn off" onclick="controlLed(3, 'off')">ВЫКЛ</button>
+            <span class="status" id="status3">❌ ВЫКЛ</span>
+        </div>
+
+        <div class="led-block">
+            <h3>🔵 Светодиод 4</h3>
+            <button class="btn on" onclick="controlLed(4, 'on')">ВКЛ</button>
+            <button class="btn off" onclick="controlLed(4, 'off')">ВЫКЛ</button>
+            <span class="status" id="status4">❌ ВЫКЛ</span>
+        </div>
+    </div>
+
+    <script>
+    async function controlLed(ledNumber, action) {
+        try {
+            // Здесь будет запрос к вашему Arduino
+            const response = await fetch(`http://ВАШ_IP_ARDUINO/led${ledNumber}${action}`);
+            
+            // Обновляем статус
+            document.getElementById(`status${ledNumber}`).textContent = 
+                action === 'on' ? '✅ ВКЛ' : '❌ ВЫКЛ';
+                
+        } catch (error) {
+            alert('Ошибка подключения к Arduino');
+        }
+    }
+    </script>
+</body>
+</html>
