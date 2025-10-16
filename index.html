@@ -4,191 +4,87 @@
     <meta charset="UTF-8">
     <title>Управление Arduino</title>
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            margin: 20px; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        .container { 
-            max-width: 500px; 
-            margin: 0 auto; 
-            background: white; 
-            padding: 25px; 
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        .led-block { 
-            margin: 20px 0; 
-            padding: 20px; 
-            border: 2px solid #e0e0e0; 
-            border-radius: 10px;
-            background: #fafafa;
-        }
-        .btn { 
-            padding: 12px 24px; 
-            margin: 8px; 
-            border: none; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            color: white; 
-            font-size: 16px;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        .on { background: #4CAF50; } /* Зеленый */
-        .off { background: #f44336; } /* Красный */
-        .status { 
-            margin-left: 15px; 
-            font-weight: bold; 
-            font-size: 18px;
-            padding: 8px 15px;
-            border-radius: 6px;
-        }
-        .status-on { 
-            color: #4CAF50; 
-            background: #e8f5e8; 
-        }
-        .status-off { 
-            color: #f44336; 
-            background: #ffeaea; 
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        h3 {
-            color: #555;
-            margin-bottom: 15px;
-        }
-        .ip-section {
-            margin-top: 30px;
-            padding: 20px;
-            background: #e3f2fd;
-            border-radius: 10px;
-            border: 2px solid #bbdefb;
-        }
-        .ip-input {
-            padding: 12px;
-            font-size: 16px;
-            border: 2px solid #2196F3;
-            border-radius: 6px;
-            width: 200px;
-            margin-right: 10px;
-        }
-        .save-btn {
-            background: #2196F3;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        .save-btn:hover {
-            background: #1976D2;
-        }
-        .current-ip {
-            margin-top: 10px;
-            font-weight: bold;
-            color: #1976D2;
-        }
+        body { font-family: Arial; margin: 20px; }
+        .btn { padding: 10px; margin: 5px; color: white; border: none; border-radius: 5px; }
+        .on { background: green; }
+        .off { background: red; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🎛️ Управление светодиодами Arduino</h1>
-        
-        <div class="led-block">
-            <h3>🔴 Светодиод 1 (PIN 7)</h3>
-            <button class="btn on" onclick="controlLed(1, 'on')">ВКЛЮЧИТЬ</button>
-            <button class="btn off" onclick="controlLed(1, 'off')">ВЫКЛЮЧИТЬ</button>
-            <span class="status status-off" id="status1">❌ ВЫКЛ</span>
-        </div>
+    <h1>Управление Arduino</h1>
+    
+    <div>
+        <h3>Введите IP адрес Arduino:</h3>
+        <input type="text" id="ipInput" value="192.168.3.17">
+        <button onclick="saveIP()">Сохранить IP</button>
+        <p id="currentIP">Текущий IP: 192.168.3.17</p>
+    </div>
 
-        <div class="led-block">
-            <h3>🟢 Светодиод 2 (PIN 6)</h3>
-            <button class="btn on" onclick="controlLed(2, 'on')">ВКЛЮЧИТЬ</button>
-            <button class="btn off" onclick="controlLed(2, 'off')">ВЫКЛЮЧИТЬ</button>
-            <span class="status status-off" id="status2">❌ ВЫКЛ</span>
-        </div>
-
-        <div class="led-block">
-            <h3>🟡 Светодиод 3 (PIN 5)</h3>
-            <button class="btn on" onclick="controlLed(3, 'on')">ВКЛЮЧИТЬ</button>
-            <button class="btn off" onclick="controlLed(3, 'off')">ВЫКЛЮЧИТЬ</button>
-            <span class="status status-off" id="status3">❌ ВЫКЛ</span>
-        </div>
-
-        <div class="led-block">
-            <h3>🔵 Светодиод 4 (PIN 4)</h3>
-            <button class="btn on" onclick="controlLed(4, 'on')">ВКЛЮЧИТЬ</button>
-            <button class="btn off" onclick="controlLed(4, 'off')">ВЫКЛЮЧИТЬ</button>
-            <span class="status status-off" id="status4">❌ ВЫКЛ</span>
-        </div>
-
-        <!-- СЕКЦИЯ ВВОДА IP -->
-        <div class="ip-section">
-            <h3>🌐 Настройка подключения</h3>
-            <div>
-                <input type="text" id="ipInput" class="ip-input" placeholder="192.168.3.17" value="192.168.3.17">
-                <button class="save-btn" onclick="saveIP()">💾 Сохранить IP</button>
-            </div>
-            <div class="current-ip" id="currentIP">
-                Текущий IP: 192.168.3.17
-            </div>
-            <div style="margin-top: 10px; font-size: 14px; color: #666;">
-                ⚠️ Убедитесь, что Arduino включен и подключен к сети
-            </div>
-        </div>
+    <div id="controls">
+        <p>Сначала настройте IP адрес</p>
     </div>
 
     <script>
-    let arduinoIP = '192.168.3.17'; // IP по умолчанию
+    let arduinoIP = '192.168.3.17';
 
     function saveIP() {
-        const newIP = document.getElementById('ipInput').value.trim();
+        const newIP = document.getElementById('ipInput').value;
         if (newIP) {
             arduinoIP = newIP;
             document.getElementById('currentIP').textContent = 'Текущий IP: ' + newIP;
-            alert('✅ IP сохранен: ' + newIP);
-        } else {
-            alert('⚠️ Введите IP адрес Arduino');
+            createControls();
+        }
+    }
+
+    function createControls() {
+        const controls = document.getElementById('controls');
+        controls.innerHTML = '';
+        
+        for (let i = 1; i <= 4; i++) {
+            controls.innerHTML += `
+                <div>
+                    <h3>Светодиод ${i}</h3>
+                    <button class="btn on" onclick="controlLed(${i}, 'on')">ВКЛ</button>
+                    <button class="btn off" onclick="controlLed(${i}, 'off')">ВЫКЛ</button>
+                    <span id="status${i}">❌ ВЫКЛ</span>
+                </div>
+            `;
         }
     }
 
     async function controlLed(ledNumber, action) {
         try {
-            const response = await fetch(`http://${arduinoIP}/led${ledNumber}${action}`);
+            // Пробуем разные варианты URL
+            const urls = [
+                `http://${arduinoIP}/led${ledNumber-1}${action}`,
+                `http://${arduinoIP}/led${ledNumber}${action}`,
+                `http://${arduinoIP}:80/led${ledNumber-1}${action}`
+            ];
             
-            if (response.ok) {
-                // Обновляем статус
-                const statusElement = document.getElementById(`status${ledNumber}`);
-                statusElement.textContent = action === 'on' ? '✅ ВКЛ' : '❌ ВЫКЛ';
-                statusElement.className = action === 'on' ? 'status status-on' : 'status status-off';
+            let success = false;
+            for (let url of urls) {
+                try {
+                    const response = await fetch(url);
+                    if (response.ok) {
+                        document.getElementById(`status${ledNumber}`).textContent = 
+                            action === 'on' ? '✅ ВКЛ' : '❌ ВЫКЛ';
+                        success = true;
+                        break;
+                    }
+                } catch (e) {}
             }
-                
+            
+            if (!success) {
+                alert('Не удалось подключиться к Arduino. Проверьте:\n1. IP адрес\n2. Подключение к сети\n3. Настройки роутера');
+            }
+            
         } catch (error) {
-            alert('❌ Ошибка подключения к Arduino!\n\nПроверьте:\n• IP адрес Arduino\n• Подключение к сети\n• Работу Arduino');
-            console.error('Ошибка:', error);
+            alert('Ошибка подключения: ' + error.message);
         }
     }
 
-    // Загружаем сохраненный IP при запуске
-    window.addEventListener('load', function() {
-        const savedIP = localStorage.getItem('arduinoIP');
-        if (savedIP) {
-            arduinoIP = savedIP;
-            document.getElementById('ipInput').value = savedIP;
-            document.getElementById('currentIP').textContent = 'Текущий IP: ' + savedIP;
-        }
-    });
+    // Создаем элементы управления при загрузке
+    window.onload = createControls;
     </script>
 </body>
 </html>
